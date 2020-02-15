@@ -1,1 +1,1 @@
-[More information at the wiki](https://wiki.shiro.pro/software/scraper)
+[More information at the docs](https://docs.shiro.pro/software/scraper)
