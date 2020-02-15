@@ -41,6 +41,6 @@ class Scraper:
 
 
 if __name__ == "__main__":
-    init(dsn=os.environ.get("SENTRY_SCRAPER_DSN"), release=f"scraper@{os.environ.get('SCRAPER_RELEASE')}")
+    init(dsn=os.environ.get("SENTRY_SCRAPER_DSN"), release=f"scraper-{os.environ.get('SCRAPER_RELEASE')}")
     logging.basicConfig(level=logging.INFO, format="%(asctime)s :: %(levelname)s :: %(message)s")
     SCRAPER = Scraper()
