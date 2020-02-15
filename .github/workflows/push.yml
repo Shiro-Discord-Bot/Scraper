@@ -1,0 +1,16 @@
+name: Build master image
+
+on: push
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@master
+      - name: Login to Docker
+        run: docker login -u mrspinne -p ${{ secrets.DOCKER_TOKEN }}
+      - name: Build Docker image
+        run: docker build --build-arg RELEASE=master -t shirodiscordbot/scraper:master .
+      - name: Push image to Docker
+        run: docker push shirodiscordbot/scraper:master

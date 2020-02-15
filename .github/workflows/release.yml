@@ -1,0 +1,43 @@
+name: Build image and create release
+
+on:
+  release:
+    types:
+      - published
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set release env
+        run: echo ::set-env name=RELEASE::${GITHUB_REF:10}
+      - name: Checkout project
+        uses: actions/checkout@master
+      - name: Login to Docker
+        run: docker login -u mrspinne -p ${{ secrets.DOCKER_TOKEN }}
+      - name: Build Docker image
+        run: docker build --build-arg RELEASE=$RELEASE -t shirodiscordbot/scraper -t shirodiscordbot/scraper:$RELEASE .
+      - name: Push image to Docker
+        run: docker push shirodiscordbot/scraper
+
+  sentry:
+    runs-on: ubuntu-latest
+    needs: docker
+    env:
+      SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+      SENTRY_ORG: shiro-discord-bot
+    steps:
+      - name: Set release env
+        run: echo ::set-env name=SENTRY_SCRAPER_RELEASE::scraper@${GITHUB_REF:10}
+      - name: Checkout project
+        uses: actions/checkout@master
+      - name: Install Sentry CLI
+        run: curl -sL https://sentry.io/get-cli/ | bash
+      - name: Create new release
+        run: sentry-cli releases new -p scraper $SENTRY_SCRAPER_RELEASE
+      - name: Set commits
+        run: sentry-cli releases set-commits --auto $SENTRY_SCRAPER_RELEASE
+      - name: Finalize release
+        run: sentry-cli releases finalize $SENTRY_SCRAPER_RELEASE
+      - name: Deploy release
+        run: sentry-cli releases deploys $SENTRY_SCRAPER_RELEASE new -e production

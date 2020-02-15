@@ -1,0 +1,6 @@
+pymongo
+sentry-sdk
+praw
+jikanpy
+moviepy
+requests
