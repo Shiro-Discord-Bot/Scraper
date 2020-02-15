@@ -1,4 +1,6 @@
+.idea/
 src/cache/*
 src/themes/*
+
 !src/cache/.gitkeep
 !src/themes/.gitkeep

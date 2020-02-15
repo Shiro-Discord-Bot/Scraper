@@ -28,7 +28,7 @@ jobs:
       SENTRY_ORG: shiro-discord-bot
     steps:
       - name: Set release env
-        run: echo ::set-env name=SENTRY_SCRAPER_RELEASE::scraper@${GITHUB_REF:10}
+        run: echo ::set-env name=SENTRY_SCRAPER_RELEASE::scraper-${GITHUB_REF:10}
       - name: Checkout project
         uses: actions/checkout@master
       - name: Install Sentry CLI
